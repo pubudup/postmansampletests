@@ -1,0 +1,201 @@
+{
+	"info": {
+		"_postman_id": "49c7f228-caab-437f-9573-006e635f3493",
+		"name": "Test API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Sample GET",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "9a3f8732-3818-44d8-93de-9fb5db7d82b2",
+						"exec": [
+							"const body = pm.response.json();",
+							"",
+							"pm.test(\"check response code\", function(){",
+							"    pm.response.to.have.status(200);",
+							"})",
+							"pm.test(\"check no client side errors\", function(){",
+							"     pm.expect(pm.response.code).not.to.be.oneOf([400,401,403,404]);",
+							"})",
+							"pm.test(\"check response foo2 value\", function(){",
+							"    pm.expect(body.args.foo2).to.eql(\"bar2\");",
+							"})",
+							"pm.test(\"check response header::x-forwarded-proto\", function(){",
+							"    pm.expect(body.headers['x-forwarded-proto']).to.eql(\"https\");",
+							"    ",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "https://{{host}}/get?foo1={{foo1}}&foo2={{foo2}}",
+					"protocol": "https",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"get"
+					],
+					"query": [
+						{
+							"key": "foo1",
+							"value": "{{foo1}}"
+						},
+						{
+							"key": "foo2",
+							"value": "{{foo2}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Sample POST",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "aef8ef27-903e-471f-ad95-3dd1bdf9a0f3",
+						"exec": [
+							"const body = JSON.parse(responseBody); ",
+							"console.log(body.headers);",
+							"",
+							"pm.test(\"Check data is correctly set\", function(){",
+							"    pm.expect(body.data).to.be.eql(pm.environment.get(\"data2\"));",
+							"    pm.expect(body.url).to.contain(pm.environment.get(\"host\"));",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "ab2671b9-8219-4ce9-8b9f-6a14f7184154",
+						"exec": [
+							"pm.environment.set(\"data2\",\"Updated data\")"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{{data2}}"
+				},
+				"url": {
+					"raw": "https://{{host}}/post",
+					"protocol": "https",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"post"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Sample PUT",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "46d53239-579d-4b31-a548-ba6e4f68c30d",
+						"exec": [
+							"const body = JSON.parse(responseBody);",
+							"",
+							"pm.test(\"Check response code\", function(){",
+							"    pm.response.to.have.status(200)",
+							"})",
+							"",
+							"pm.test(\"Check response message\", function(){",
+							"    pm.expect(body.data).to.be.eql(pm.environment.get(\"data2\"))",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{{data2}}"
+				},
+				"url": {
+					"raw": "https://postman-echo.com/put",
+					"protocol": "https",
+					"host": [
+						"postman-echo",
+						"com"
+					],
+					"path": [
+						"put"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Sample DELETE",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "ff29c812-df3b-4701-adaa-f8fbc790bf44",
+						"exec": [
+							"pm.test(\"Status code check\", function(){",
+							"    pm.response.to.have.status(200)",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{{data}}"
+				},
+				"url": {
+					"raw": "https://postman-echo.com/delete",
+					"protocol": "https",
+					"host": [
+						"postman-echo",
+						"com"
+					],
+					"path": [
+						"delete"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"protocolProfileBehavior": {}
+}
